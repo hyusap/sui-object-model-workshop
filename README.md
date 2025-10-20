@@ -133,13 +133,13 @@ Navigate to [`scripts/src/input_objects_exercise.ts`](./scripts/src/input_object
 ## Lesson 3: Putting it together
 ### Exercise 3: Scavenger Hunting with PTBs
 
-In this exercise, you will try to get the `SUI` coin in Testnet from the vault using a key created by PTBs. The deployed contract is at [`0xef97bc41cfa119c78905d8385e89b1ee5ce79b244f79834d44be213366dae105`](https://suiscan.xyz/testnet/object/0xef97bc41cfa119c78905d8385e89b1ee5ce79b244f79834d44be213366dae105/contracts).
+In this exercise, you will try to get the `SUI` coin in Testnet from the vault using a key created by PTBs. The deployed contract is at [`0x9603a31f4b3f32843b819b8ed85a5dd3929bf1919c6693465ad7468f9788ef39`](https://suiscan.xyz/testnet/object/0x9603a31f4b3f32843b819b8ed85a5dd3929bf1919c6693465ad7468f9788ef39/contracts).
 
 Navigate to [`scavenger`](./lessons/scavenger) to read the smart contract code.
 
 You will need to create a PTB to:
 1. Create a key
-2. Set the key code correctly
+2. Set the key code correctly (Hint: You can view the on-chain vault object fields https://suiscan.xyz/testnet/object/0x8d85d37761d2a4e391c1b547c033eb0e22eb5b825820cbcc0c386b8ecb22be33/fields)
 3. Use the key to withdraw the `SUI` coin from the vault
 4. Transfer the `SUI` coin to your account
 

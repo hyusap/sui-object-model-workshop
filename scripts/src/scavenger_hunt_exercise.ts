@@ -15,8 +15,8 @@ const { secretKey } = decodeSuiPrivateKey(keyPairJson.privateKey);
 const keypair = Ed25519Keypair.fromSecretKey(secretKey);
 const suiAddress = keypair.getPublicKey().toSuiAddress();
 
-const PACKAGE_ID = `0xef97bc41cfa119c78905d8385e89b1ee5ce79b244f79834d44be213366dae105`;
-const VAULT_ID = `0x30055170c308f9cae917b3bcad0ad02002471fc020c3b725aac2acea254b739d`;
+const PACKAGE_ID = `0x9603a31f4b3f32843b819b8ed85a5dd3929bf1919c6693465ad7468f9788ef39`;
+const VAULT_ID = `0x8d85d37761d2a4e391c1b547c033eb0e22eb5b825820cbcc0c386b8ecb22be33`;
 
 const rpcUrl = getFullnodeUrl("testnet");
 const suiClient = new SuiClient({ url: rpcUrl });
