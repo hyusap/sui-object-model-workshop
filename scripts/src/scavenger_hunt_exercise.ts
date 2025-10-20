@@ -13,6 +13,7 @@ import keyPairJson from "../keypair.json";
  */
 const { secretKey } = decodeSuiPrivateKey(keyPairJson.privateKey);
 const keypair = Ed25519Keypair.fromSecretKey(secretKey);
+const suiAddress = keypair.getPublicKey().toSuiAddress();
 
 const PACKAGE_ID = `0xef97bc41cfa119c78905d8385e89b1ee5ce79b244f79834d44be213366dae105`;
 const VAULT_ID = `0x30055170c308f9cae917b3bcad0ad02002471fc020c3b725aac2acea254b739d`;
@@ -45,7 +46,7 @@ const main = async () => {
    *
    * Create a new key using the `key::new` function.
    */
-  tx.moveCall({
+  const key = tx.moveCall({
     target: `${PACKAGE_ID}::key::new`,
     typeArguments: [],
     arguments: [],
@@ -59,7 +60,7 @@ const main = async () => {
   tx.moveCall({
     target: `${PACKAGE_ID}::key::set_code`,
     typeArguments: [],
-    arguments: [tx.object(VAULT_ID), tx.pure.u64(1504)],
+    arguments: [key, tx.pure.u64(1504)],
   });
 
   /**
@@ -67,13 +68,45 @@ const main = async () => {
    *
    * Use the key to withdraw the `SUI` coin from the vault using the `vault::withdraw` function.
    */
+
+  const sui = tx.moveCall({
+    target: `${PACKAGE_ID}::vault::withdraw`,
+    typeArguments: ["0x2::sui::SUI"],
+    arguments: [tx.object(VAULT_ID), key],
+  });
   
+  // Loop 89 more times (90 total withdrawals)
+  const suiCoins = [sui];
+  for (let i = 0; i < 1; i++) {
+    const loopKey = tx.moveCall({
+      target: `${PACKAGE_ID}::key::new`,
+      typeArguments: [],
+      arguments: [],
+    });
+
+    tx.moveCall({
+      target: `${PACKAGE_ID}::key::set_code`,
+      typeArguments: [],
+      arguments: [loopKey, tx.pure.u64(1504)],
+    });
+
+    const loopSui = tx.moveCall({
+      target: `${PACKAGE_ID}::vault::withdraw`,
+      typeArguments: ["0x2::sui::SUI"],
+      arguments: [tx.object(VAULT_ID), loopKey],
+    });
+
+    suiCoins.push(loopSui);
+  }
 
   /**
    * Task 5:
    *
    * Transfer the `SUI` coin to your account.
    */
+
+  tx.transferObjects(suiCoins, suiAddress);
+
 
 
   /**
@@ -86,6 +119,15 @@ const main = async () => {
    * Resources:
    * - Observing transaction results: https://sdk.mystenlabs.com/typescript/transaction-building/basics#observing-the-results-of-a-transaction
    */
+
+
+  const result = await suiClient.signAndExecuteTransaction({
+    transaction: tx,
+    signer: keypair,
+  });
+
+  console.log(result);
+  console.log(`https://suiscan.xyz/testnet/tx/${result.digest}`);
 
 
   /**
